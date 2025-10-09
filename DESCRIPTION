@@ -1,0 +1,14 @@
+Package: windCleanHybrid
+Type: Package
+Title: Hybrid Model for Cleaning Abnormal Wind Turbine Data
+Version: 0.2.0
+Authors@R: c(person("Your", "Name", email = "your@email.com", role = c("aut", "cre")))
+Description: Professional implementation of a hybrid model combining Fuzzy C-Means clustering,
+    Mahalanobis distance, and Artificial Neural Networks for detecting and removing outliers in
+    wind turbine SCADA data, with full validation, documentation, and error handling.
+License: MIT
+Encoding: UTF-8
+Depends: R (>= 4.1)
+Imports: tidyverse, ppclust, keras, caret, Metrics, glue, ggplot2
+LazyData: true
+RoxygenNote: 7.3.1
