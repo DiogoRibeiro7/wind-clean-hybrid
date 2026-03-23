@@ -10,5 +10,6 @@ License: MIT
 Encoding: UTF-8
 Depends: R (>= 4.1)
 Imports: tidyverse, ppclust, keras, caret, Metrics, glue, ggplot2
+Suggests: testthat (>= 3.0.0)
 LazyData: true
 RoxygenNote: 7.3.1
