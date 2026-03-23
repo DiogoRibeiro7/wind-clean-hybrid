@@ -6,10 +6,10 @@ Authors@R: c(person("Your", "Name", email = "your@email.com", role = c("aut", "c
 Description: Professional implementation of a hybrid model combining Fuzzy C-Means clustering,
     Mahalanobis distance, and Artificial Neural Networks for detecting and removing outliers in
     wind turbine SCADA data, with full validation, documentation, and error handling.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1)
-Imports: tidyverse, ppclust, caret, Metrics, glue, ggplot2
+Imports: dplyr, tibble, ppclust, Metrics, glue, ggplot2
 Suggests: testthat (>= 3.0.0)
 Enhances: keras
 Config/testthat/edition: 3
