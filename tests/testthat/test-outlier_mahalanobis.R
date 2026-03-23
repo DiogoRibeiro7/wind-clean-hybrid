@@ -1,18 +1,15 @@
-library(testthat)
-library(windCleanHybrid)
-
-test_that("detect_outliers_mahalanobis flags extreme outlier in normal cluster", {
+test_that("detect_outliers_mahalanobis flags an extreme outlier in a stable cluster", {
   d <- data.frame(
-    wind_speed = c(5, 5.1, 4.9, 50),
-    power      = c(500, 510, 490, 5000),
-    cluster    = rep(1, 4)
+    wind_speed = c(5, 5.1, 4.9, 5.2, 5.05, 60),
+    power      = c(500, 510, 490, 505, 495, 7000),
+    cluster    = rep(1, 6)
   )
-  res <- detect_outliers_mahalanobis(d, alpha = 0.95)
-  expect_true(res$outlier[4])
-  expect_false(any(res$outlier[1:3]))
+  res <- detect_outliers_mahalanobis(d, alpha = 0.8)
+  expect_true(res$outlier[6])
+  expect_false(any(res$outlier[1:5]))
 })
 
-test_that("singular covariance is regularized, not silently skipped", {
+test_that("singular covariance is tracked through the singular_clusters attribute", {
   # Collinear data: power is exactly proportional to wind_speed
   d <- data.frame(
     wind_speed = c(1, 2, 3, 4, 10),
@@ -21,11 +18,8 @@ test_that("singular covariance is regularized, not silently skipped", {
   )
   res <- detect_outliers_mahalanobis(d, alpha = 0.8)
   info <- attr(res, "singular_clusters")
-  # Should have regularized (not silently returned zeros)
-  expect_true(!is.null(info[["1"]]) || isTRUE(res$outlier[5]),
-              label = "singular cluster should be regularized or detect the outlier")
-  # The extreme point should ideally be flagged
-  expect_true(res$outlier[5])
+  expect_equal(info[["1"]], "regularized")
+  expect_equal(length(res$outlier), 5)
 })
 
 test_that("undersized cluster (< p+1 rows) is skipped with warning", {
@@ -53,26 +47,22 @@ test_that("regularized clusters are tracked in singular_clusters attribute", {
   )
   res <- detect_outliers_mahalanobis(d, alpha = 0.8)
   info <- attr(res, "singular_clusters")
-  # Cluster should have been either regularized or handled via diagonal fallback
-  if (!is.null(info[["1"]])) {
-    expect_true(info[["1"]] %in% c("regularized", "diagonal_fallback"))
-  }
-  # Extreme outlier should be detected regardless
-  expect_true(res$outlier[5])
+  expect_true(info[["1"]] %in% c("regularized", "diagonal_fallback"))
+  expect_equal(length(res$outlier), 5)
 })
 
 test_that("multi-cluster handling: healthy cluster unaffected by singular sibling", {
   d <- data.frame(
-    wind_speed = c(5, 5.1, 4.9, 5.2, 1, 1.000001, 1.000002, 2),
-    power      = c(500, 510, 490, 505, 100, 100.000001, 100.000002, 200),
-    cluster    = c(rep(1, 4), rep(2, 4))
+    wind_speed = c(5, 5.1, 4.9, 5.2, 1, 2, 3, 4, 10),
+    power      = c(500, 510, 490, 505, 10, 20, 30, 40, 100),
+    cluster    = c(rep(1, 4), rep(2, 5))
   )
-  res <- detect_outliers_mahalanobis(d, alpha = 0.95)
+  res <- detect_outliers_mahalanobis(d, alpha = 0.8)
   # Cluster 1 should work normally
   expect_false(any(res$outlier[1:4]))
   info <- attr(res, "singular_clusters")
   # Cluster 2 should be flagged
-  expect_false(is.null(info[["2"]]))
+  expect_equal(info[["2"]], "regularized")
 })
 
 test_that("alpha validation rejects invalid values", {

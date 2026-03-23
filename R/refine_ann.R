@@ -7,7 +7,11 @@
 #' @export
 refine_ann <- function(data, epochs = 80) {
   if (!requireNamespace("keras", quietly = TRUE))
-    stop("Package 'keras' must be installed.")
+    stop(
+      "Package 'keras' must be installed to use ANN refinement. ",
+      "Install it with install.packages('keras') and configure the backend before running refine_ann().",
+      call. = FALSE
+    )
   if (!is.numeric(epochs) || epochs < 10)
     stop("'epochs' must be >= 10.")
   x <- as.matrix(data$wind_speed)

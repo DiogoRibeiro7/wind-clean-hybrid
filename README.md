@@ -1,7 +1,7 @@
 # 🌬️ wind-clean-hybrid
 
-**Professional R package for cleaning and modeling wind-turbine SCADA data**
-Combines **Fuzzy C-Means clustering**, **Mahalanobis distance**, and **Artificial Neural Networks** into a robust hybrid pipeline designed to detect and remove abnormal SCADA points from wind turbine power curves.
+**R package for cleaning and modeling wind-turbine SCADA data**
+Combines **Fuzzy C-Means clustering**, **Mahalanobis distance**, and **Artificial Neural Networks** into a hybrid pipeline designed to detect and remove abnormal SCADA points from wind turbine power curves.
 
 ---
 
@@ -9,7 +9,7 @@ Combines **Fuzzy C-Means clustering**, **Mahalanobis distance**, and **Artificia
 
 Wind turbine Supervisory Control and Data Acquisition (SCADA) systems often produce noisy and inconsistent data due to sensor drift, communication errors, icing, or maintenance events. These anomalies distort the power curve, leading to inaccurate modeling and performance assessment.
 
-`wind-clean-hybrid` implements a reproducible, fully validated hybrid cleaning model that integrates:
+`wind-clean-hybrid` implements a hybrid cleaning model that integrates:
 
 | Stage | Method                   | Purpose                                                               |
 | ----- | ------------------------ | --------------------------------------------------------------------- |
@@ -18,11 +18,13 @@ Wind turbine Supervisory Control and Data Acquisition (SCADA) systems often prod
 | 3     | **Mahalanobis Distance** | Flag outliers within each cluster based on covariance-aware distance. |
 | 4     | **ANN Refinement**       | Train a neural network on cleaned data and filter residual outliers.  |
 
-This design unites interpretability, computational efficiency, and robustness — suitable for research, industrial SCADA analytics, and real-time turbine monitoring.
+This design combines interpretable preprocessing with model-based refinement and is intended for research and exploratory SCADA analytics.
 
 ---
 
 ## ⚙️ Installation
+
+The package is installable from GitHub without the ANN stack. The ANN refinement step is optional and depends on the R `keras` package plus a working backend setup.
 
 ```r
 # Install development tools if needed
@@ -33,6 +35,8 @@ library(devtools)
 install_github("DiogoRibeiro7/wind-clean-hybrid")
 ```
 
+For ANN usage, install and configure `keras` separately before running `refine_ann()` or the full `run_hybrid_pipeline()`.
+
 ---
 
 ## 🚀 Usage Example
@@ -41,7 +45,7 @@ install_github("DiogoRibeiro7/wind-clean-hybrid")
 library(windCleanHybrid)
 library(readr)
 
-# Load example SCADA dataset
+# Load the example dataset from the repository checkout
 data <- read_csv("data/example_scada.csv")
 
 # Run the hybrid pipeline
@@ -53,6 +57,8 @@ print(result$metrics)
 # Visualize cleaned power curve
 plot_results(result$cleaned_data)
 ```
+
+The example path above assumes you are running from the repository root. Installed-package data access is not packaged yet.
 
 ---
 
@@ -67,8 +73,9 @@ list(
 )
 ```
 
-**Combined Accuracy (CA)** aggregates normalized RMSE, MAPE, and R² into a bounded index ∈ [0, 1].
-Higher values indicate cleaner, more consistent turbine behavior.
+**Combined Accuracy (CA)** aggregates normalized RMSE, MAPE, and R² into a bounded index in `[0, 1]`.
+
+Current limitation: `MAPE` and `CA` may become undefined when observed power contains zeros, because zero-safe metric handling has not been implemented yet.
 
 ---
 
@@ -86,12 +93,21 @@ Higher values indicate cleaner, more consistent turbine behavior.
 
 ---
 
+## ⚠️ Current Limits
+
+* ANN refinement requires the optional `keras` package and backend setup.
+* Example data loading currently assumes a repository checkout rather than installed-package access.
+* Reproducibility controls such as fixed seeds are not exposed through the main pipeline yet.
+* Output is currently a plain list; a richer result object is planned for a later major release.
+
+---
+
 ## 🧠 Methodological Notes
 
 * **FCM Clustering:** Allows partial membership, improving robustness under overlapping operating regimes.
 * **Mahalanobis Distance:** Considers feature covariance, outperforming Euclidean thresholds for correlated SCADA features.
 * **ANN Refinement:** Learns nonlinear residuals and removes residual anomalies.
-* **Error Handling:** Each step validated with explicit type checks and safe fallbacks.
+* **Error Handling:** Core steps include input checks and basic runtime guards, but some edge cases are still being hardened.
 
 ---
 
@@ -131,9 +147,9 @@ wind-clean-hybrid/
 
 ## 📄 License
 
-MIT License © 2025 [Diogo Ribeiro](https://github.com/DiogoRibeiro7)
+This repository is intended to be released under the MIT License.
 
-You are free to use, modify, and distribute this software, provided that proper credit is given.
+The package metadata and root license file are still being finalized.
 
 ---
 
@@ -142,4 +158,4 @@ You are free to use, modify, and distribute this software, provided that proper 
 For issues, improvements, or academic collaboration:
 
 * GitHub Issues: [wind-clean-hybrid/issues](https://github.com/DiogoRibeiro7/wind-clean-hybrid/issues)
-* Maintainer: [Diogo Ribeiro](https://github.com/DiogoRibeiro7)
+* Repository owner: [Diogo Ribeiro](https://github.com/DiogoRibeiro7)

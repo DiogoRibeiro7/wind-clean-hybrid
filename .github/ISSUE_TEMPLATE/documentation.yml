@@ -1,0 +1,29 @@
+name: Documentation
+description: Report missing, inaccurate, or unclear docs.
+title: "[Docs]: "
+labels:
+  - documentation
+body:
+  - type: textarea
+    id: location
+    attributes:
+      label: Documentation Area
+      description: Which file, page, or example is affected?
+      placeholder: README, function docs, issue template, workflow docs, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What Needs Improvement
+      placeholder: Describe the inaccuracy, omission, or ambiguity.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      placeholder: If you know the fix, describe it here.
+    validations:
+      required: false
+
