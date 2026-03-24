@@ -22,7 +22,14 @@ test_that("run_hybrid_pipeline returns cleaned data and metrics with stubbed ANN
 
   if ("windCleanHybrid" %in% loadedNamespaces()) {
     res <- testthat::with_mocked_bindings(
-      run_hybrid_pipeline(d, centers = 2, m = 2.5, alpha = 0.8, epochs = 25),
+      run_hybrid_pipeline(
+        d,
+        centers = 2,
+        m = 2.5,
+        alpha = 0.8,
+        refinement_method = "ann",
+        epochs = 25
+      ),
       apply_fcm_clustering = mock_apply_fcm,
       detect_outliers_mahalanobis = mock_detect_outliers,
       refine_ann = mock_refine_ann,
@@ -38,13 +45,23 @@ test_that("run_hybrid_pipeline returns cleaned data and metrics with stubbed ANN
     assign("apply_fcm_clustering", mock_apply_fcm, envir = globalenv())
     assign("detect_outliers_mahalanobis", mock_detect_outliers, envir = globalenv())
     assign("refine_ann", mock_refine_ann, envir = globalenv())
-    res <- run_hybrid_pipeline(d, centers = 2, m = 2.5, alpha = 0.8, epochs = 25)
+    res <- run_hybrid_pipeline(
+      d,
+      centers = 2,
+      m = 2.5,
+      alpha = 0.8,
+      refinement_method = "ann",
+      epochs = 25
+    )
   }
 
   expect_named(res, c("cleaned_data", "metrics", "config"))
   expect_s3_class(res$cleaned_data, c("tbl_df", "tbl", "data.frame"))
   expect_named(res$metrics, c("RMSE", "MAE", "MAPE", "R2", "CA"))
-  expect_equal(res$config, list(centers = 2, m = 2.5, alpha = 0.8, epochs = 25))
+  expect_equal(
+    res$config,
+    list(centers = 2, m = 2.5, alpha = 0.8, refinement_method = "ann", epochs = 25)
+  )
   expect_true(all(is.finite(unlist(res$metrics))))
 })
 
@@ -59,7 +76,7 @@ test_that("run_hybrid_pipeline wraps ANN dependency failures", {
   if ("windCleanHybrid" %in% loadedNamespaces()) {
     expect_error(
       testthat::with_mocked_bindings(
-        run_hybrid_pipeline(d, centers = 2),
+        run_hybrid_pipeline(d, centers = 2, refinement_method = "ann"),
         refine_ann = function(data, epochs = 80) {
           stop(
             "Package 'keras' must be installed to use ANN refinement. ",
@@ -87,8 +104,43 @@ test_that("run_hybrid_pipeline wraps ANN dependency failures", {
     )
 
     expect_error(
-      run_hybrid_pipeline(d, centers = 2),
+      run_hybrid_pipeline(d, centers = 2, refinement_method = "ann"),
       paste0("Pipeline failed: ", keras_error)
     )
   }
+})
+
+test_that("run_hybrid_pipeline supports linear model refinement without keras", {
+  d <- example_positive_scada()
+
+  mock_apply_fcm <- function(data, centers = 4, m = 2) {
+    tibble::as_tibble(data) |>
+      dplyr::mutate(cluster = rep(1L, nrow(data)))
+  }
+
+  mock_detect_outliers <- function(data, alpha = 0.95, reg_eps = 1e-6) {
+    tibble::as_tibble(data) |>
+      dplyr::mutate(outlier = FALSE)
+  }
+
+  if ("windCleanHybrid" %in% loadedNamespaces()) {
+    res <- testthat::with_mocked_bindings(
+      run_hybrid_pipeline(d, centers = 2, refinement_method = "linear_model"),
+      apply_fcm_clustering = mock_apply_fcm,
+      detect_outliers_mahalanobis = mock_detect_outliers,
+      .package = "windCleanHybrid"
+    )
+  } else {
+    old_apply_fcm <- get("apply_fcm_clustering", envir = globalenv())
+    old_detect_outliers <- get("detect_outliers_mahalanobis", envir = globalenv())
+    on.exit(assign("apply_fcm_clustering", old_apply_fcm, envir = globalenv()), add = TRUE)
+    on.exit(assign("detect_outliers_mahalanobis", old_detect_outliers, envir = globalenv()), add = TRUE)
+    assign("apply_fcm_clustering", mock_apply_fcm, envir = globalenv())
+    assign("detect_outliers_mahalanobis", mock_detect_outliers, envir = globalenv())
+    res <- run_hybrid_pipeline(d, centers = 2, refinement_method = "linear_model")
+  }
+
+  expect_equal(res$config$refinement_method, "linear_model")
+  expect_named(res$cleaned_data, c("wind_speed", "power", "pred", "residual"))
+  expect_true(all(is.finite(unlist(res$metrics))))
 })

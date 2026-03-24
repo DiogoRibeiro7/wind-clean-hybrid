@@ -8,6 +8,7 @@ if (!exists("run_hybrid_pipeline", mode = "function")) {
   source(file.path(repo_root, "R", "clustering_fcm.R"), local = globalenv())
   source(file.path(repo_root, "R", "outlier_mahalanobis.R"), local = globalenv())
   source(file.path(repo_root, "R", "refine_ann.R"), local = globalenv())
+  source(file.path(repo_root, "R", "refine_linear_model.R"), local = globalenv())
   source(file.path(repo_root, "R", "utils_metrics.R"), local = globalenv())
   source(file.path(repo_root, "R", "visualize.R"), local = globalenv())
   source(file.path(repo_root, "R", "hybrid_model.R"), local = globalenv())

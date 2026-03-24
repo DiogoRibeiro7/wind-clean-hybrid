@@ -49,7 +49,14 @@ library(readr)
 data <- read_csv("data/example_scada.csv")
 
 # Run the hybrid pipeline
-result <- run_hybrid_pipeline(data, centers = 4, m = 2, alpha = 0.95, epochs = 80)
+result <- run_hybrid_pipeline(
+  data,
+  centers = 4,
+  m = 2,
+  alpha = 0.95,
+  refinement_method = "linear_model",
+  epochs = 80
+)
 
 # Print metrics
 print(result$metrics)
@@ -70,7 +77,7 @@ Each pipeline run returns:
 list(
   cleaned_data = <tibble with columns wind_speed, power, pred, residual>,
   metrics = list(RMSE, MAE, MAPE, R2, CA),
-  config = list(centers, m, alpha, epochs)
+  config = list(centers, m, alpha, refinement_method, epochs)
 )
 ```
 
@@ -87,6 +94,7 @@ When observed power contains zeros, `MAPE` is computed on the non-zero subset so
 | `apply_fcm_clustering()`        | Performs Fuzzy C-Means clustering on wind speed and power.            |
 | `detect_outliers_mahalanobis()` | Identifies statistical outliers in each cluster.                      |
 | `refine_ann()`                  | Trains an ANN on cleaned data and computes residuals.                 |
+| `refine_linear_model()`         | Fits a linear fallback model and computes residuals.                  |
 | `evaluate_metrics()`            | Computes RMSE, MAE, MAPE, R², and CA.                                 |
 | `plot_results()`                | Generates a ggplot power curve comparing observed vs predicted power. |
 | `run_hybrid_pipeline()`         | Runs the entire process end-to-end.                                   |
@@ -107,6 +115,7 @@ When observed power contains zeros, `MAPE` is computed on the non-zero subset so
 * **FCM Clustering:** Allows partial membership, improving robustness under overlapping operating regimes.
 * **Mahalanobis Distance:** Considers feature covariance, outperforming Euclidean thresholds for correlated SCADA features.
 * **ANN Refinement:** Learns nonlinear residuals and removes residual anomalies.
+* **Linear Model Refinement:** Provides a lightweight fallback when ANN dependencies are unavailable or unnecessary.
 * **Error Handling:** Core steps include input checks and basic runtime guards, but some edge cases are still being hardened.
 
 ---

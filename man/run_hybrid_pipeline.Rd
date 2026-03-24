@@ -4,7 +4,14 @@
 \alias{run_hybrid_pipeline}
 \title{Run Full Hybrid Pipeline}
 \usage{
-run_hybrid_pipeline(data, centers = 4, m = 2, alpha = 0.95, epochs = 80)
+run_hybrid_pipeline(
+  data,
+  centers = 4,
+  m = 2,
+  alpha = 0.95,
+  refinement_method = c("ann", "linear_model"),
+  epochs = 80
+)
 }
 \arguments{
 \item{data}{data.frame with wind_speed, power.}
@@ -14,6 +21,9 @@ run_hybrid_pipeline(data, centers = 4, m = 2, alpha = 0.95, epochs = 80)
 \item{m}{fuzzifier parameter for fuzzy c-means clustering.}
 
 \item{alpha}{confidence level used by Mahalanobis outlier detection.}
+
+\item{refinement_method}{refinement stage implementation. Supported values
+are `"ann"` and `"linear_model"`.}
 
 \item{epochs}{integer number of ANN training epochs.}
 }

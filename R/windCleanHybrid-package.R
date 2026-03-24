@@ -10,7 +10,7 @@
 #' @importFrom ggplot2 aes geom_line geom_point ggplot labs theme_minimal
 #' @importFrom Metrics mae mape rmse
 #' @importFrom ppclust fcm
-#' @importFrom stats cov predict qchisq sd var
+#' @importFrom stats cov lm predict qchisq sd var
 #' @importFrom tibble as_tibble tibble
 "_PACKAGE"
 
@@ -20,6 +20,6 @@
 #' @importFrom ggplot2 aes geom_line geom_point ggplot labs theme_minimal
 #' @importFrom Metrics mae mape rmse
 #' @importFrom ppclust fcm
-#' @importFrom stats cov predict qchisq sd var
+#' @importFrom stats cov lm predict qchisq sd var
 #' @importFrom tibble as_tibble tibble
 NULL
