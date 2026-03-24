@@ -37,14 +37,14 @@ jobs:
         if: runner.os == 'Linux'
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::keras
           needs: check
 
       - name: Install package dependencies
         if: runner.os != 'Linux'
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::keras
           needs: check
 
       - name: Run R CMD check
