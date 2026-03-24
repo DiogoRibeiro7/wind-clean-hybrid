@@ -146,9 +146,9 @@ wind-clean-hybrid/
 
 ## 📄 License
 
-This repository is intended to be released under the MIT License.
+MIT License © 2026 [Diogo Ribeiro](https://github.com/DiogoRibeiro7)
 
-The package metadata and root license file are still being finalized.
+See [`LICENSE.md`](./LICENSE.md) for the full license text.
 
 ---
 
@@ -157,4 +157,4 @@ The package metadata and root license file are still being finalized.
 For issues, improvements, or academic collaboration:
 
 * GitHub Issues: [wind-clean-hybrid/issues](https://github.com/DiogoRibeiro7/wind-clean-hybrid/issues)
-* Repository owner: [Diogo Ribeiro](https://github.com/DiogoRibeiro7)
+* Maintainer: [Diogo Ribeiro](https://github.com/DiogoRibeiro7)
