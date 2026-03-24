@@ -6,13 +6,10 @@
 #' @return Cleaned tibble with valid rows.
 #' @export
 preclean_data <- function(data) {
-  if (!is.data.frame(data)) stop("Input must be a data.frame or tibble.")
-  required_cols <- c("wind_speed", "power")
-  missing_cols <- setdiff(required_cols, names(data))
-  if (length(missing_cols) > 0)
-    stop(glue::glue("Missing required columns: {paste(missing_cols, collapse = ', ')}"))
-  if (!all(sapply(data[required_cols], is.numeric)))
-    stop("Columns 'wind_speed' and 'power' must be numeric.")
+  validation <- validate_scada_data(data)
+  if (!validation$valid) {
+    stop(paste(validation$issues, collapse = "; "), call. = FALSE)
+  }
   cleaned <- data |>
     dplyr::filter(!is.na(wind_speed), !is.na(power)) |>
     dplyr::filter(wind_speed >= 0, power >= 0)

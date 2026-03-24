@@ -3,6 +3,7 @@ library(testthat)
 repo_root <- normalizePath(test_path("..", ".."), winslash = "/", mustWork = TRUE)
 
 if (!exists("run_hybrid_pipeline", mode = "function")) {
+  source(file.path(repo_root, "R", "validate_scada.R"), local = globalenv())
   source(file.path(repo_root, "R", "preclean.R"), local = globalenv())
   source(file.path(repo_root, "R", "clustering_fcm.R"), local = globalenv())
   source(file.path(repo_root, "R", "outlier_mahalanobis.R"), local = globalenv())
