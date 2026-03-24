@@ -49,7 +49,7 @@ library(readr)
 data <- read_csv("data/example_scada.csv")
 
 # Run the hybrid pipeline
-result <- run_hybrid_pipeline(data, centers = 4)
+result <- run_hybrid_pipeline(data, centers = 4, m = 2, alpha = 0.95, epochs = 80)
 
 # Print metrics
 print(result$metrics)
@@ -69,7 +69,8 @@ Each pipeline run returns:
 ```r
 list(
   cleaned_data = <tibble with columns wind_speed, power, pred, residual>,
-  metrics = list(RMSE, MAE, MAPE, R2, CA)
+  metrics = list(RMSE, MAE, MAPE, R2, CA),
+  config = list(centers, m, alpha, epochs)
 )
 ```
 
