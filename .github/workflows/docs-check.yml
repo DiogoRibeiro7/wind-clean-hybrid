@@ -1,0 +1,44 @@
+name: docs-check
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - "feat/**"
+      - "fix/**"
+  pull_request:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
+
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install documentation tooling
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::roxygen2
+          needs: false
+
+      - name: Regenerate docs
+        shell: Rscript {0}
+        run: |
+          unlink("NAMESPACE")
+          roxygen2::roxygenise(".")
+
+      - name: Check for documentation drift
+        shell: bash
+        run: |
+          git diff --exit-code -- NAMESPACE man
