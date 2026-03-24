@@ -19,7 +19,7 @@ test_that("singular covariance is tracked through the singular_clusters attribut
   res <- detect_outliers_mahalanobis(d, alpha = 0.8)
   info <- attr(res, "singular_clusters")
   expect_equal(info[["1"]], "regularized")
-  expect_equal(length(res$outlier), 5)
+  expect_equal(res$outlier, rep(FALSE, 5))
 })
 
 test_that("undersized cluster (< p+1 rows) is skipped with warning", {
@@ -48,7 +48,7 @@ test_that("regularized clusters are tracked in singular_clusters attribute", {
   res <- detect_outliers_mahalanobis(d, alpha = 0.8)
   info <- attr(res, "singular_clusters")
   expect_true(info[["1"]] %in% c("regularized", "diagonal_fallback"))
-  expect_equal(length(res$outlier), 5)
+  expect_equal(res$outlier, rep(FALSE, 5))
 })
 
 test_that("multi-cluster handling: healthy cluster unaffected by singular sibling", {
