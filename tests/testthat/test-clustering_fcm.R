@@ -16,7 +16,7 @@ test_that("apply_fcm_clustering validates tuning parameters", {
   expect_error(apply_fcm_clustering(d, m = 1), "'m'")
 })
 
-test_that("apply_fcm_clustering propagates backend errors with context", {
+test_that("apply_fcm_clustering rejects zero-variance inputs before scaling", {
   d <- data.frame(
     wind_speed = rep(5, 5),
     power = rep(100, 5)
@@ -24,6 +24,6 @@ test_that("apply_fcm_clustering propagates backend errors with context", {
 
   expect_error(
     apply_fcm_clustering(d, centers = 2),
-    "FCM clustering failed"
+    "Zero variance detected"
   )
 })
