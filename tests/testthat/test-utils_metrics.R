@@ -18,7 +18,7 @@ test_that("evaluate_metrics requires power and pred columns", {
   )
 })
 
-test_that("evaluate_metrics currently returns NaN for zero-power MAPE regression", {
+test_that("evaluate_metrics handles zero-power observations without returning NaN", {
   d <- data.frame(
     power = c(0, 100, 200),
     pred = c(0, 110, 190)
@@ -26,6 +26,18 @@ test_that("evaluate_metrics currently returns NaN for zero-power MAPE regression
 
   metrics <- evaluate_metrics(d)
 
-  expect_true(is.nan(metrics$MAPE))
-  expect_true(is.nan(metrics$CA))
+  expect_equal(metrics$MAPE, Metrics::mape(c(100, 200), c(110, 190)))
+  expect_true(is.finite(metrics$CA))
+})
+
+test_that("evaluate_metrics returns NA for MAPE when all observed power is zero", {
+  d <- data.frame(
+    power = c(0, 0, 0),
+    pred = c(0, 5, 10)
+  )
+
+  metrics <- evaluate_metrics(d)
+
+  expect_true(is.na(metrics$MAPE))
+  expect_true(is.finite(metrics$CA))
 })

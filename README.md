@@ -74,8 +74,7 @@ list(
 ```
 
 **Combined Accuracy (CA)** aggregates normalized RMSE, MAPE, and R² into a bounded index in `[0, 1]`.
-
-Current limitation: `MAPE` and `CA` may become undefined when observed power contains zeros, because zero-safe metric handling has not been implemented yet.
+When observed power contains zeros, `MAPE` is computed on the non-zero subset so the metric layer remains finite on typical SCADA data.
 
 ---
 
