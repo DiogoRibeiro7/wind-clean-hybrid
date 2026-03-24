@@ -1,0 +1,56 @@
+name: Bug Report
+description: Report a defect, regression, or unexpected behavior.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for runtime failures, incorrect results, regressions, and packaging problems.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is broken?
+      placeholder: A concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: Provide a minimal reproducible example when possible.
+      placeholder: |
+        1. Install the package
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: What actually happened?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, R version, package version, and dependency details if relevant.
+      placeholder: |
+        OS:
+        R version:
+        Package version:
+        Other details:
+    validations:
+      required: false
+

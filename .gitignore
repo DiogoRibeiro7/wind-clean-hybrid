@@ -1,0 +1,34 @@
+# R session files
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+
+# User-specific environment files
+.Renviron
+.Renviron.site
+
+# R package build artifacts
+*.tar.gz
+/*.Rcheck/
+windCleanHybrid.Rcheck/
+
+# Test and coverage artifacts
+tests/testthat/_snaps/
+tests/testthat/_book/
+coverage/
+*.covr
+
+# Dependency and local cache directories
+renv/library/
+renv/python/
+.cache/
+
+# IDE/editor files
+.Rproj.user/
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db

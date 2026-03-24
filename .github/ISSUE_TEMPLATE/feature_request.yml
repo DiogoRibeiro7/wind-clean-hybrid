@@ -1,0 +1,37 @@
+name: Feature Request
+description: Propose a new capability or enhancement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Opportunity
+      description: What user need or workflow gap does this address?
+      placeholder: Explain the problem first, not just the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Change
+      description: Describe the feature or improvement.
+      placeholder: What should the package do differently?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      placeholder: Describe any workarounds or alternative approaches.
+    validations:
+      required: false
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected Impact
+      placeholder: How would this help users, maintainers, or release quality?
+    validations:
+      required: false
+
