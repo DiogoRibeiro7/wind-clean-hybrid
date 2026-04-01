@@ -36,7 +36,7 @@ jobs:
           cat(sprintf("pkg_file=%s\n", pkg_file), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: r-package-tarball
           path: ${{ steps.build-package.outputs.pkg_file }}
