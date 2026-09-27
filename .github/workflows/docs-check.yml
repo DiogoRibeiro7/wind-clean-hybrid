@@ -29,7 +29,7 @@ jobs:
       - name: Install documentation tooling
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::roxygen2@7.3.3
+          extra-packages: any::roxygen2
           needs: false
 
       - name: Regenerate docs
