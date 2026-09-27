@@ -13,5 +13,10 @@ distance, and ANN refinement.
 \author{
 \strong{Maintainer}: Diogo Ribeiro \email{diogo_dj@hotmail.com}
 
+Authors:
+\itemize{
+  \item Diogo Ribeiro \email{diogo_dj@hotmail.com}
+}
+
 }
 \keyword{internal}
